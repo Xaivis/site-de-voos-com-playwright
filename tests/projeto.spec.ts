@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect} from '@playwright/test';
 import { vaiParaSelecaoVoos, vaiParaFinalizacao, vaiParaPagamento, vaiParaSelecaoPassageiros } from '../config/funcoes';
 
 test('Teste End-to-End no site de testes https://www.qapractice.com/flight-booking-scenarios',{
@@ -45,8 +45,9 @@ test('Teste End-to-End no site de testes https://www.qapractice.com/flight-booki
     });
     await test.step('Pagamento - Emily', async () => {
         await vaiParaPagamento(page);
-        // Testes de dados de pagamento
+
     });
+    
     await test.step('Finalização - Ivis', async () => {
         await vaiParaFinalizacao(page);
         // Testes da tela de sucesso / voucher
