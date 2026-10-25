@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect} from '@playwright/test';
 import { vaiParaSelecaoVoos, vaiParaFinalizacao, vaiParaPagamento, vaiParaSelecaoPassageiros } from '../config/funcoes';
 
 test('Teste End-to-End no site de testes https://www.qapractice.com/flight-booking-scenarios', {
