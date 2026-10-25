@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { vaiParaSelecaoVoos, vaiParaFinalizacao, vaiParaPagamento, vaiParaSelecaoPassageiros } from '../config/funcoes';
 
-test('Teste End-to-End no site de testes https://www.qapractice.com/flight-booking-scenarios',{
+test('Teste End-to-End no site de testes https://www.qapractice.com/flight-booking-scenarios', {
     annotation: [
         {
             type: '📢 Boas-vindas',
@@ -29,26 +29,36 @@ test('Teste End-to-End no site de testes https://www.qapractice.com/flight-booki
         }
     ]
 }, async ({ page }) => {
-    
-     await test.step('Procura dos voos - Clara', async () => {
+
+    await test.step('Procura dos voos - Clara', async () => {
         // Testes e preenchimento dos campos de busca
-        // await page.getByRole('button', { name: 'Buscar' }).click();
-    });
-    await test.step('Seleção dos voos - Guilherme', async () => {
-        await vaiParaSelecaoVoos(page);
-        // Coloque aqui o que você está testando nesta etapa:
-        // await expect(page.getByText('Voo 123')).toBeVisible();
-    });
-    await test.step('Escolha dos passageiros - Vanderson', async () => {
-        await vaiParaSelecaoPassageiros(page);
-        // Testes dos dados dos passageiros
-    });
-    await test.step('Pagamento - Emily', async () => {
-        await vaiParaPagamento(page);
-        // Testes de dados de pagamento
-    });
-    await test.step('Finalização - Ivis', async () => {
-        await vaiParaFinalizacao(page);
-        // Testes da tela de sucesso / voucher
+
+        await test.step('Verificar se a data de retorno está visível', async () => {
+            await expect(page.locator('#flight-return-date')).toBeVisible();
+        });
+
+        await test.step('Verificar se a data de retorno ficou oculta', async () => {
+            await expect(page.locator('#flight-return-date')).toBeHidden();
+        });
+
+
+
+        await test.step('Seleção dos voos - Guilherme', async () => {
+            await vaiParaSelecaoVoos(page);
+            // Coloque aqui o que você está testando nesta etapa:
+            // await expect(page.getByText('Voo 123')).toBeVisible();
+        });
+        await test.step('Escolha dos passageiros - Vanderson', async () => {
+            await vaiParaSelecaoPassageiros(page);
+            // Testes dos dados dos passageiros
+        });
+        await test.step('Pagamento - Emily', async () => {
+            await vaiParaPagamento(page);
+            // Testes de dados de pagamento
+        });
+        await test.step('Finalização - Ivis', async () => {
+            await vaiParaFinalizacao(page);
+            // Testes da tela de sucesso / voucher
+        });
     });
 });
