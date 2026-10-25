@@ -11,7 +11,7 @@ test('Verificar campos de pagamento', async ({ page }) => {
 });
 
 test('Verificar número de cartão inválido', async ({ page }) => {
-     await vaiParaPagamento(page);
+    await vaiParaPagamento(page);
 
     const numeroCartao = page.getByTestId('flight-card-number');
     await numeroCartao.fill('411111');
@@ -24,7 +24,7 @@ test('Verificar número de cartão inválido', async ({ page }) => {
 });
 
 test('Verificar data de expiração inválida', async ({ page }) => {
-     await vaiParaPagamento(page);
+    await vaiParaPagamento(page);
 
     await page.getByTestId('flight-card-number').fill('4111111111111111');
 
