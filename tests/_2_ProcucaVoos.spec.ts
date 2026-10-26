@@ -85,4 +85,8 @@ test('Preencher todos os campos de Search Flights', async ({ page }) => {
     await test.step('Clicar no botão de buscar voos', async () => {
         await page.getByRole('button', { name: 'Search Flights' }).click();
     });
+
+    await test.step('Validar que a etapa de passageiros foi aberta', async () => {
+        await expect(page.getByTestId('flight-passenger-name')).toBeVisible();
+    });
 });
