@@ -1,12 +1,25 @@
 import { test, expect } from '@playwright/test';
 import { vaiParaPagamento } from '../config/funcoes';
 
+test('Verificar resumo e confirmação dos dados da passagem', async ({ page }) => {
+    await vaiParaPagamento(page);
+    
+    const resumoPassagem = page.locator('.card-body')
+    
+     await expect(resumoPassagem).toBeVisible();
+});
+
 test('Verificar campos de pagamento', async ({ page }) => {
     await vaiParaPagamento(page);
 
     await expect(page.getByTestId('flight-card-number')).toBeVisible();
     await expect(page.getByTestId('flight-expiry')).toBeVisible();
     await expect(page.getByTestId('flight-cvv')).toBeVisible();
+
+    const botaoPagamento = page.getByTestId('flight-book');
+
+    await expect(botaoPagamento).toBeVisible();
+    await expect(botaoPagamento).toBeEnabled();    
 
 });
 
