@@ -4,7 +4,8 @@ import { vaiParaPagamento } from '../config/funcoes';
 test('Verificar resumo e confirmação dos dados da passagem', async ({ page }) => {
     await vaiParaPagamento(page);
     
-    const resumoPassagem = page.locator('.card-body')
+    const resumoPassagem = page.getByText('Global Wings (GW100)$210× 1');
+    // const resumoPassagem = page.locator('.card-body')
     
      await expect(resumoPassagem).toBeVisible();
 });
@@ -22,7 +23,7 @@ test('Verificar campos de pagamento', async ({ page }) => {
     await expect(botaoPagamento).toBeEnabled();    
 
 });
-
+    
 test('Verificar número de cartão inválido', async ({ page }) => {
     await vaiParaPagamento(page);
 
