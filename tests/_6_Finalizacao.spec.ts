@@ -1,9 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { vaiParaFinalizacao } from '../config/funcoes';
 
-test('deve confirmar reserva com dados corretos', async ({ page }) => {
+test.beforeEach(async ({ page }) => {
     await vaiParaFinalizacao(page);
 
+});
+
+test('deve confirmar reserva com dados corretos', async ({ page }) => {
     // 1. Confirmação do cabeçalho, etapa atual e referência
     const stepDone = page.getByTestId('flight-steps').getByText(/Done/i);
     await expect(stepDone).toBeVisible();
@@ -34,8 +37,6 @@ test('deve confirmar reserva com dados corretos', async ({ page }) => {
 });
 
 test('botão voltar para home', async ({ page }) => {
-    await vaiParaFinalizacao(page);
-
     const botaoHome = page.getByRole('button', { name: /back to home page/i });
     await expect(botaoHome).toBeVisible();
     await botaoHome.click();
