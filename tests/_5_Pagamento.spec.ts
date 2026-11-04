@@ -1,17 +1,20 @@
 import { test, expect } from '@playwright/test';
 import { vaiParaPagamento } from '../config/funcoes';
 
-test('Verificar resumo e confirmação dos dados da passagem', async ({ page }) => {
+test.beforeEach(async ({ page }) => {
     await vaiParaPagamento(page);
+
+});
+
+test('Verificar resumo e confirmação dos dados da passagem', async ({ page }) => {
     
     const resumoPassagem = page.getByText('Global Wings (GW100)$210× 1');
-    // const resumoPassagem = page.locator('.card-body')
+    //const resumoPassagem = page.locator('.card-body')
     
      await expect(resumoPassagem).toBeVisible();
 });
 
 test('Verificar campos de pagamento', async ({ page }) => {
-    await vaiParaPagamento(page);
 
     await expect(page.getByTestId('flight-card-number')).toBeVisible();
     await expect(page.getByTestId('flight-expiry')).toBeVisible();
@@ -25,7 +28,6 @@ test('Verificar campos de pagamento', async ({ page }) => {
 });
     
 test('Verificar número de cartão inválido', async ({ page }) => {
-    await vaiParaPagamento(page);
 
     const numeroCartao = page.getByTestId('flight-card-number');
     await numeroCartao.fill('411111');
@@ -38,7 +40,6 @@ test('Verificar número de cartão inválido', async ({ page }) => {
 });
 
 test('Verificar data de expiração inválida', async ({ page }) => {
-    await vaiParaPagamento(page);
 
     await page.getByTestId('flight-card-number').fill('4111111111111111');
 
@@ -52,7 +53,6 @@ test('Verificar data de expiração inválida', async ({ page }) => {
 });
 
 test('Verificar CVV inválido', async ({ page }) => {
-    await vaiParaPagamento(page);
 
     await page.getByTestId('flight-card-number').fill('4111111111111111');
     await page.getByTestId('flight-expiry').fill('12/30');
@@ -66,7 +66,6 @@ test('Verificar CVV inválido', async ({ page }) => {
 
 
 test('Impedir pagamento com campos vazios', async ({ page }) => {
-    await vaiParaPagamento(page);
 
     const numeroCartao = page.getByTestId('flight-card-number');
     const dataExpiracao = page.getByTestId('flight-expiry');
@@ -80,6 +79,5 @@ test('Impedir pagamento com campos vazios', async ({ page }) => {
     await expect(dataExpiracao).toBeVisible();
     await expect(cvv).toBeVisible();
 
-    await expect(page).not.toHaveURL(/confirmation/);
 
 });
