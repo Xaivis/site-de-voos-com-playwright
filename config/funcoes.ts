@@ -34,4 +34,4 @@ export async function vaiParaFinalizacao(page: Page) {
     await page.getByTestId('flight-cvv').fill('123');
     await page.getByTestId('flight-book').click();
     await page.waitForURL('**/flight-booking-scenarios');
-} 
+}
