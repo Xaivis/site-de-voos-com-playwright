@@ -1,93 +1,90 @@
 import { test, expect } from '@playwright/test';
+import { ProcuraPage } from '../pages/procura.page';
 
 
 
 test('Verificar campo de retorno', async ({ page }) => {
+    const procura = new ProcuraPage(page);  
+    // procura é o objeto (instância) da classe 
+    // a classe ProcuraPage contém os métodos
 
     await test.step('Acessar a página de reservas de voos', async () => {
-        await page.goto('https://www.qapractice.com/flight-booking-scenarios');
+        await procura.acessarPagina();
+        // por meio do objeto chamamos o método
     });
 
     await test.step('Verificar se a data de retorno está visível', async () => {
-        await expect(page.locator('#flight-return-date')).toBeVisible();
+        await expect(procura.dataRetorno).toBeVisible();
     });
 
     await test.step('Marcar a opção de viagem só de ida', async () => {
-        await page.getByRole('checkbox', { name: 'One Way' }).check();
+        await procura.selecionarViagemIda();
     });
 
     await test.step('Verificar se a data de retorno ficou oculta', async () => {
-        await expect(page.locator('#flight-return-date')).toBeHidden();
+        await expect(procura.dataRetorno).toBeHidden();
     });
 });
 
 test('Validar campos obrigatórios', async ({ page }) => {
+    const procura = new ProcuraPage(page);
 
     await test.step('Acessar a página de reservas de voos', async () => {
-        await page.goto('https://www.qapractice.com/flight-booking-scenarios');
+        await procura.acessarPagina();
     });
 
     await test.step('Clicar em buscar voos sem preencher os campos', async () => {
-        await page.getByRole('button', { name: 'Search Flights' }).click();
+        await procura.buscarVoos();
     });
 
     // Aqui vamos verificar as mensagens de validação
 });
 
 test('Impedir origem e destino iguais', async ({ page }) => {
+    const procura = new ProcuraPage(page);
 
     await test.step('Acessar a página de reservas de voos', async () => {
-        await page.goto('https://www.qapractice.com/flight-booking-scenarios');
+        await procura.acessarPagina();
+        
     });
 
     await test.step('Selecionar a mesma cidade na origem e no destino', async () => {
-        await page.locator('#flight-from').selectOption('New York');
-        await page.locator('#flight-to').selectOption('New York');
+        await procura.selecionarOrigem('New York');
+        await procura.selecionarDestino('New York');
     });
 
     await test.step('Clicar em buscar voos', async () => {
-        await page.getByRole('button', { name: 'Search Flights' }).click();
+        await procura.buscarVoos();
     });
 
     // Aqui vamos verificar a mensagem de erro
 });
 
 test('Preencher todos os campos de Search Flights', async ({ page }) => {
+    const procura = new ProcuraPage(page);
 
     await test.step('Acessar a página de reservas de voos', async () => {
-        await page.goto('https://www.qapractice.com/flight-booking-scenarios');
+        await procura.acessarPagina();
     });
 
-    await test.step('Selecionar a cidade de origem', async () => {
-        await page.locator('#flight-from').selectOption('New York');
-    });
+    await test.step('Preencher os campos de busca', async () => {
+        
+        await procura.selecionarOrigem('New York');
+        await procura.selecionarDestino('London');
+        await procura.preencherDataPartida('2026-11-10');
+        await procura.preencherDataRetorno('2026-11-20');
+        await procura.preencherPassageiros('2');
+        await procura.selecionarClasse('Business');
+     });
 
-    await test.step('Selecionar a cidade de destino', async () => {
-        await page.locator('#flight-to').selectOption('London');
-    });
-
-    await test.step('Preencher a data de partida', async () => {
-        await page.locator('#flight-departure-date').fill('2026-11-10');
-    });
-
-    await test.step('Preencher a data de retorno', async () => {
-        await page.locator('#flight-return-date').fill('2026-11-20');
-    });
-
-    await test.step('Informar a quantidade de passageiros', async () => {
-        await page.locator('#flight-passengers').fill('2');
-    });
-
-    await test.step('Selecionar a classe da viagem', async () => {
-        await page.locator('#flight-class').selectOption('Business');
-    });
 
     await test.step('Clicar no botão de buscar voos', async () => {
-        await page.getByRole('button', { name: 'Search Flights' }).click();
+        await procura.buscarVoos();
     });
    
     await test.step('Validar que os resultados dos voos foram exibidos', async () => {
-        await expect(page.getByTestId('flight-sort')).toBeVisible();
+        await procura.verificarResultados();
+        await expect(procura.resultados).toBeVisible();
     });
 
 
