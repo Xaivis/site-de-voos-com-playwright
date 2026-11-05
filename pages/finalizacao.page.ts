@@ -4,17 +4,19 @@ export class Finalizacao {
   readonly page: Page;
   readonly steps: Locator;
   readonly sucess: Locator;
-  readonly textBook: Locator;
   readonly pnr: Locator;
-  readonly button: Locator;
+  readonly buttonR: Locator;
+  readonly buttonB: Locator;
   readonly search: Locator;
+  readonly url: string = "https://www.qapractice.com/";
 
   constructor(page: Page) {
+    this.page = page;
     this.steps = page.getByTestId("flight-steps");
     this.sucess = page.getByTestId("flight-booking-success");
-    this.textBook = page.getByText(/^Booking reference/);
     this.pnr = page.getByTestId("flight-pnr");
-    this.button = page.getByRole("button", { name: /book another flight/i });
+    this.buttonR = page.getByRole("button", { name: /book another flight/i });
+    this.buttonB = page.getByRole("button", { name: /back to home page/i });
     this.search = page.getByTestId("flight-search");
   }
 
@@ -26,7 +28,7 @@ export class Finalizacao {
     return this.page.getByText(name, { exact: true });
   }
 
-  async textBox(name: string) {
+  async textBox(name: string | RegExp) {
     return this.page.getByText(name);
   }
 }
