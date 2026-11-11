@@ -1,16 +1,18 @@
+
 import { test, expect } from '@playwright/test';
-import { vaiParaSelecaoPassageiros, vaiParaSelecaoVoos } from '../config/funcoes';
+import { vaiParaSelecaoPassageiros, vaiParaSelecaoVoos} from '../config/funcoes';
+import { Selecao } from '../pages/selecao.page';
 
 // Valida se os filtros estão visíveis
 test('Verificar funcionalidades para Seleção de voos', async ({ page }) => {
   await vaiParaSelecaoVoos(page);
 
   await test.step('Verificar se o ordenar por está visível', async () => {
-  await expect(page.locator('#flight-sort')).toBeVisible();
+    await expect(page.locator('#flight-sort')).toBeVisible();
   });
 
   await test.step('Verificar se as companhias aéreas estão visíveis', async () => {
-  await expect(page.locator('#flight-filter-airline')).toBeVisible();
+    await expect(page.locator('#flight-filter-airline')).toBeVisible();
   });
 });
 
@@ -18,12 +20,14 @@ test('Verificar funcionalidades para Seleção de voos', async ({ page }) => {
 test('Testar clique no botão Selecionar', async ({ page }) => {
   await vaiParaSelecaoVoos(page);
 
+  const selecao = new Selecao(page);
+
   await test.step('Verificar se o botão Selecionar está visível', async () => {
-  await expect(page.getByTestId('flight-select-AL248')).toBeVisible();
+    await expect(selecao.select248).toBeVisible();
   });
 
   await test.step('Clicar no botão Selecionar', async () => {
-  await page.getByTestId('flight-select-AL248').click();
+    await selecao.select248.click();
   });
 });
 
@@ -31,49 +35,38 @@ test('Testar clique no botão Selecionar', async ({ page }) => {
 test('Testar avanço para a etapa de passageiros', async ({ page }) => {
   await vaiParaSelecaoVoos(page);
 
+  const selecao = new Selecao(page);
+
   await test.step('Selecionar voo de ida', async () => {
-  await page.getByTestId('flight-select-BJ211').click();
-});
+    await selecao.select211.click();
+  });
 
   await test.step('Verificar se o botão para próxima etapa está visível', async () => {
-  await expect(page.getByTestId('flight-continue-to-passengers')).toBeVisible();
+    await expect(selecao.continue).toBeVisible();
   });
 
   await test.step('Clicar no botão para próxima etapa', async () => {
-  await page.getByTestId('flight-continue-to-passengers').click();
+    await selecao.continue.click();
   });
 
   await test.step('Acessar a seleção de passageiros', async () => {
-  await vaiParaSelecaoPassageiros(page);
+    await vaiParaSelecaoPassageiros(page);
   });
-
 });
-
 
 // Teste End to End
-test('Filtrando opções e selecionando o vôo desejado', async ({ page }) => {
+test('Filtrando opções e selecionando o voo desejado', async ({ page }) => {
   await vaiParaSelecaoVoos(page);
 
-  
-  await test.step('Selecionar ordenação de baixo a alto', async () => {
-  await page.getByTestId('flight-sort').selectOption('price-asc');
-});
+  const selecao = new Selecao(page);
 
-  await test.step('Filtrar pela companhia aérea BlueJet', async () => {
-  await page.getByTestId('flight-filter-airline').selectOption('BlueJet');
-});
+  await test.step('Filtrar opções e selecionar voo desejado', async () => {
+    await selecao.clicarNosCampos();
+  });
 
-  await test.step('Selecionar voo de ida', async () => {
-  await page.getByTestId('flight-select-BJ211').click();
-});
-
-  await test.step('Avançar para a próxima etapa', async () => {
-  await page.getByTestId('flight-continue-to-passengers').click();
-});
-  
   await test.step('Acessar a seleção de passageiros', async () => {
-  await vaiParaSelecaoPassageiros(page);
+    await vaiParaSelecaoPassageiros(page);
+  });
 });
 
-});
-  
+

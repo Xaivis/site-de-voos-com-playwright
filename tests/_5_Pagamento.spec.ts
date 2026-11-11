@@ -1,83 +1,64 @@
 import { test, expect } from '@playwright/test';
 import { vaiParaPagamento } from '../config/funcoes';
+import { PagamentoPage } from '../pages/pagamento.page';
+
+
+let pagamento: PagamentoPage;
+
 
 test.beforeEach(async ({ page }) => {
     await vaiParaPagamento(page);
 
+    pagamento = new PagamentoPage(page);
+
 });
 
 test('Verificar resumo e confirmação dos dados da passagem', async ({ page }) => {
-    
-    const resumoPassagem = page.getByText('Global Wings (GW100)$210× 1');
-    //const resumoPassagem = page.locator('.card-body')
-    
-     await expect(resumoPassagem).toBeVisible();
+
+    await pagamento.verificarResumoPassagem();
+
 });
 
 test('Verificar campos de pagamento', async ({ page }) => {
 
-    await expect(page.getByTestId('flight-card-number')).toBeVisible();
-    await expect(page.getByTestId('flight-expiry')).toBeVisible();
-    await expect(page.getByTestId('flight-cvv')).toBeVisible();
-
-    const botaoPagamento = page.getByTestId('flight-book');
-
-    await expect(botaoPagamento).toBeVisible();
-    await expect(botaoPagamento).toBeEnabled();    
+    await pagamento.verificarCampos();   
 
 });
     
 test('Verificar número de cartão inválido', async ({ page }) => {
 
-    const numeroCartao = page.getByTestId('flight-card-number');
-    await numeroCartao.fill('411111');
+    await pagamento.preencherCartao('411111');
+    await pagamento.preencherValidade('12/30');
+    await pagamento.preencherCVV('123');
 
-    await page.getByTestId('flight-expiry').fill('12/30');
-    await page.getByTestId('flight-cvv').fill('123');
-
-    await page.getByTestId('flight-book').click();
+    await pagamento.clicarPagar();
 
 });
 
 test('Verificar data de expiração inválida', async ({ page }) => {
 
-    await page.getByTestId('flight-card-number').fill('4111111111111111');
+    await pagamento.preencherCartao('4111111111111111');
+    await pagamento.preencherValidade('13/30');
+    await pagamento.preencherCVV('123');
 
-    const dataExpiracao = page.getByTestId('flight-expiry');
+    await pagamento.clicarPagar();
 
-    await dataExpiracao.fill('13/30');
-
-    await page.getByTestId('flight-cvv').fill('123');
-
-    await page.getByTestId('flight-book').click();
 });
 
 test('Verificar CVV inválido', async ({ page }) => {
 
-    await page.getByTestId('flight-card-number').fill('4111111111111111');
-    await page.getByTestId('flight-expiry').fill('12/30');
+    await pagamento.preencherCartao('4111111111111111');
+    await pagamento.preencherValidade('12/30');
+    await pagamento.preencherCVV('1');
 
-    const cvv = page.getByTestId('flight-cvv');
+    await pagamento.clicarPagar();
 
-    await cvv.fill('1');
-
-    await page.getByTestId('flight-book').click();
 });
-
 
 test('Impedir pagamento com campos vazios', async ({ page }) => {
 
-    const numeroCartao = page.getByTestId('flight-card-number');
-    const dataExpiracao = page.getByTestId('flight-expiry');
-    const cvv = page.getByTestId('flight-cvv');
+    await pagamento.clicarPagar();
 
-    const botaoPagamento = page.getByTestId('flight-book');
-
-    await botaoPagamento.click();
-
-    await expect(numeroCartao).toBeVisible();
-    await expect(dataExpiracao).toBeVisible();
-    await expect(cvv).toBeVisible();
-
+    await pagamento.verificarCampos();
 
 });
