@@ -1,0 +1,43 @@
+name: Execução de Testes Regressivos
+
+on:
+  push:
+    branches: [main, master, 'feature/**', 'ci/**']
+  pull_request:
+    branches: [main, master]
+  schedule:
+    - cron: "0 9,12,15,18 * * 1,2,3,4,5"
+  workflow_dispatch:
+
+jobs:
+  e2e_testes:
+    name: Testes E2E (Playwright)
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do projeto
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci || npm install
+
+      - name: Instalar navegadores do Playwright e dependências do sistema
+        run: npx playwright install --with-deps
+
+      - name: Executar testes Playwright
+        run: npx playwright test
+
+      - name: Publicar relatório Playwright como artefato
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
