@@ -48,7 +48,7 @@ site-de-voos-com-playwright/
 Clone o repositório:
 
 ```
-git clone URL_DO_REPOSITORIO
+git clone https://github.com/Xaivis/site-de-voos-com-playwright.git
 ```
 
 Acesse a pasta do projeto:
